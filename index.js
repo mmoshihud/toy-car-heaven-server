@@ -20,6 +20,13 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+
+    app.post("/toys/add", async (req, res) => {
+      const toys = req.body;
+      const result = await toysCollection.insertOne(toys);
+      console.log(`A document was inserted with the _id: ${result.insertedId}`);
+      res.send(result);
+    });
   } finally {
     // Ensures that the client will close when you finish/error
   }
