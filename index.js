@@ -1,18 +1,18 @@
 const express = require("express");
 const { MongoClient, ObjectId } = require("mongodb");
 require("dotenv").config();
-const cors = require("cors");
 
+const cors = require("cors");
 const app = express();
-const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.j1jxfgc.mongodb.net/?retryWrites=true&w=majority`;
-const client = new MongoClient(uri);
 
 app.use(cors());
 app.use(express.json());
 
+const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.j1jxfgc.mongodb.net/?retryWrites=true&w=majority`;
+const client = new MongoClient(uri);
+
 async function run() {
   try {
-    await client.connect();
     const toysCollection = client.db("toysDB").collection("toys");
 
     app.get("/toys", async (req, res) => {
@@ -51,7 +51,7 @@ async function run() {
         },
       };
 
-      const result = await userCollection.updateOne(
+      const result = await toysCollection.updateOne(
         filter,
         updatedUser,
         options
