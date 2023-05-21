@@ -34,6 +34,30 @@ async function run() {
       const toy = await toysCollection.findOne(query);
       res.send(toy);
     });
+
+    app.put("/users/:id", async (req, res) => {
+      const id = req.params.id;
+      const toy = req.body;
+
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedUser = {
+        $set: {
+          name: toy.name,
+          subCategory: toy.subCategory,
+          quantity: toy.quantity,
+          price: toy.price,
+          photoURL: toy.photoURL,
+        },
+      };
+
+      const result = await userCollection.updateOne(
+        filter,
+        updatedUser,
+        options
+      );
+      res.send(result);
+    });
   } finally {
     // Ensures that the client will close when you finish/error
   }
