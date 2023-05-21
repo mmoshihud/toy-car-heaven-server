@@ -35,7 +35,7 @@ async function run() {
       res.send(toy);
     });
 
-    app.put("/users/:id", async (req, res) => {
+    app.put("/toys/:id", async (req, res) => {
       const id = req.params.id;
       const toy = req.body;
 
@@ -56,6 +56,14 @@ async function run() {
         updatedUser,
         options
       );
+      res.send(result);
+    });
+
+    app.delete("/toys/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await toysCollection.deleteOne(query);
+      console.log("Successfully Deleted ID:", id);
       res.send(result);
     });
   } finally {
