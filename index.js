@@ -1,5 +1,5 @@
 const express = require("express");
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId } = require("mongodb");
 require("dotenv").config();
 const cors = require("cors");
 
@@ -26,6 +26,13 @@ async function run() {
       const result = await toysCollection.insertOne(toys);
       console.log(`A document was inserted with the _id: ${result.insertedId}`);
       res.send(result);
+    });
+
+    app.get("/toys/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const toy = await toysCollection.findOne(query);
+      res.send(toy);
     });
   } finally {
     // Ensures that the client will close when you finish/error
