@@ -11,6 +11,8 @@ app.use(express.json());
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.j1jxfgc.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri);
 
+const currentDate = new Date();
+
 async function run() {
   try {
     const toysCollection = client.db("toysDB").collection("toys");
@@ -23,7 +25,12 @@ async function run() {
 
     app.post("/toys/add", async (req, res) => {
       const toys = req.body;
-      const result = await toysCollection.insertOne(toys);
+      const document = {
+        ...toys,
+        createdAt: currentDate,
+        updatedAt: currentDate,
+      };
+      const result = await toysCollection.insertOne(document);
       console.log(`A document was inserted with the _id: ${result.insertedId}`);
       res.send(result);
     });
@@ -41,19 +48,22 @@ async function run() {
 
       const filter = { _id: new ObjectId(id) };
       const options = { upsert: true };
-      const updatedUser = {
+      const updatedToy = {
         $set: {
           name: toy.name,
+          description: toy.description,
           subCategory: toy.subCategory,
           quantity: toy.quantity,
           price: toy.price,
+          rating: toy.rating,
           photoURL: toy.photoURL,
+          updatedAt: new Date(),
         },
       };
 
       const result = await toysCollection.updateOne(
         filter,
-        updatedUser,
+        updatedToy,
         options
       );
       res.send(result);
