@@ -26,6 +26,12 @@ async function run() {
         });
         const result = await cursor.toArray();
         res.send(result);
+      } else if (email) {
+        const cursor = toysCollection.find({
+          userEmail: email,
+        });
+        const result = await cursor.toArray();
+        res.send(result);
       } else {
         const cursor = toysCollection.find();
         const result = await cursor.toArray();
