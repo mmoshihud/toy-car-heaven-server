@@ -18,9 +18,19 @@ async function run() {
     const toysCollection = client.db("toysDB").collection("toys");
 
     app.get("/toys", async (req, res) => {
-      const cursor = toysCollection.find();
-      const result = await cursor.toArray();
-      res.send(result);
+      const category = req.query.category;
+      const email = req.query.email;
+      if (category) {
+        const cursor = toysCollection.find({
+          subCategory: category,
+        });
+        const result = await cursor.toArray();
+        res.send(result);
+      } else {
+        const cursor = toysCollection.find();
+        const result = await cursor.toArray();
+        res.send(result);
+      }
     });
 
     app.post("/toys/add", async (req, res) => {
