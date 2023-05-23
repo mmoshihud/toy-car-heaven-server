@@ -20,6 +20,7 @@ async function run() {
     app.get("/toys", async (req, res) => {
       const category = req.query.category;
       const email = req.query.email;
+      const sort = req.query.sort;
       if (category) {
         const cursor = toysCollection.find({
           subCategory: category,
@@ -27,9 +28,11 @@ async function run() {
         const result = await cursor.toArray();
         res.send(result);
       } else if (email) {
-        const cursor = toysCollection.find({
-          userEmail: email,
-        });
+        const cursor = toysCollection
+          .find({
+            userEmail: email,
+          })
+          .sort({ name: sort });
         const result = await cursor.toArray();
         res.send(result);
       } else {
